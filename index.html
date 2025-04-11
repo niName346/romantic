@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Открытка Манюне</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Плавный фон-градиент */
+    @keyframes backgroundFade {
+        0%   { background-color: #ffe4e6; }
+        25%  { background-color: #e9d8fd; }
+        50% { background-color: #cc7fd3; }
+        75%  { background-color: #e9d8fd; }
+        100%   { background-color: #ffe4e6; }
+    }
+
+    body {
+        animation: backgroundFade 15s ease-in-out infinite;
+        overflow-x: hidden;
+    }
+
+    /* Анимация появления */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    /* Падающие эмодзи */
+    .emoji {
+      position: fixed;
+      font-size: 1.5rem;
+      opacity: 0.8;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans text-pink-900 relative">
+
+  <!-- Контейнер для падающих эмодзи -->
+  <div id="emoji-container"></div>
+
+  <div class="max-w-3xl mx-auto py-10 px-4 space-y-10 relative z-10">
+    <h1 class="text-5xl font-bold text-center text-pink-700 drop-shadow mb-8">У нас вторая годовщина, малышка💖💖💖</h1>
+
+    <!-- Панели -->
+    <script>
+      const panels = [
+        {
+          img: './src/photo_2025-04-11_20-48-01.jpg',
+          text: 'Мы были на концерте просто лера, ты была там самой красивой! 💖',
+          hint: '🌸 В этот день мы начали встречаться, помнишь?'
+        },
+        {
+          img: './src/photo_2025-04-11_20-58-16.jpg',
+          text: 'Ты мой самый любимый десерт и у тебя бодрая и сочная попка) 🎂',
+          hint: '🎂 Я обожаю проводить с тобой время, так как нам захочется'
+        },
+        {
+          img: './src/photo_2025-04-11_21-02-57.jpg',
+          text: 'Не злись на меня сильно, я бываю друной🎁',
+          hint: '🎁 Каждый день с тобой - это праздник'
+        },
+        {
+          img: './src/photo_2025-04-11_21-03-47.jpg',
+          text: ' хе-хе-хе-хе✨',
+          hint: '✨ Ты моё....'
+        },
+        {
+          img: './src/photo_2025-04-11_21-07-50.jpg',
+          text: 'Я люблю тебя, не смотря ни на что💖💖💖',
+          hint: '🌷 Ты всегда будешь моей маленькой малышечкой 🌸🌸🌸'
+        },
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.max-w-3xl');
+        panels.forEach(({ img, text, hint }) => {
+          const section = document.createElement('section');
+          section.className = 'card bg-white/70 rounded-3xl shadow-xl p-8 flex flex-col items-center text-center space-y-6 backdrop-blur-sm cursor-pointer transition hover:scale-[1.01]';
+          section.setAttribute('onclick', 'reveal(this)');
+          section.innerHTML = `
+            <div class="content hidden flex-col items-center space-y-6">
+              <img src="${img}" class="rounded-2xl w-full max-h-96 object-cover shadow">
+              <p class="text-xl">${text}</p>
+            </div>
+            <div class="placeholder text-pink-600 text-lg">${hint}</div>
+          `;
+          container.appendChild(section);
+        });
+      });
+
+      function reveal(section) {
+        const content = section.querySelector('.content');
+        const placeholder = section.querySelector('.placeholder');
+        if (content && placeholder) {
+          placeholder.remove();
+          content.classList.remove('hidden');
+          content.classList.add('flex', 'fade-in');
+        }
+      }
+
+      // Эмодзи-анимация
+      const emojiList = ['💖','🎁','🌸','✨','🎂','🌷'];
+      function createEmoji() {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji';
+        emoji.style.left = Math.random() * 100 + 'vw';
+        emoji.style.animationDuration = 3 + Math.random() * 3 + 's';
+        emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
+        document.getElementById('emoji-container').appendChild(emoji);
+
+        setTimeout(() => emoji.remove(), 6000);
+      }
+      setInterval(createEmoji, 500);
+    </script>
+  </div>
+
+  
+    <audio id="bg-music" loop preload="auto">
+        <source src="./src/prosto_Lera_-_Lyutiki_70858804.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+    </audio>
+
+    <button id="music-toggle"
+            class="fixed top-4 right-4 bg-pink-200 hover:bg-pink-300 text-pink-800 font-semibold px-4 py-2 rounded-full shadow-lg transition z-50"
+            onclick="toggleMusic()">
+    🔇 Остановить музыку
+    </button>
+
+    <script>
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-toggle');
+    let isPlaying = false;
+
+    function toggleMusic() {
+        if (!isPlaying) {
+        audio.play();
+        btn.textContent = '🔇 Остановить музыку';
+        } else {
+        audio.pause();
+        btn.textContent = '🔈 Включить музыку';
+        }
+        isPlaying = !isPlaying;
+    }
+
+    // Включаем музыку после первого взаимодействия (любой клик)
+    function enableAutoMusic() {
+        audio.currentTime = 44; // ⏩ Начать с 10-й секунды
+        if (!isPlaying) {
+        audio.play().then(() => {
+            btn.textContent = '🔇 Остановить музыку';
+            isPlaying = true;
+        }).catch((err) => {
+            console.log("Автозапуск отклонён браузером", err);
+        });
+        }
+        document.removeEventListener('click', enableAutoMusic);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Попробуем сразу (не везде сработает)
+        audio.currentTime = 44; // ⏩ Начать с 10-й секунды
+        audio.play().then(() => {
+        btn.textContent = '🔇 Остановить музыку';
+        isPlaying = true;
+        }).catch(() => {
+        // Ожидаем клика, если автозапуск отклонён
+        document.addEventListener('click', enableAutoMusic);
+        });
+    });
+    </script>
+
+</body>
+</html>
